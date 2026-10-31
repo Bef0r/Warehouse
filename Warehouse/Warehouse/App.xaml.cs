@@ -1,8 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Windows;
 using Warehouse.Database;
+using Warehouse.Logging;
 
 namespace Warehouse
 {
@@ -23,12 +27,17 @@ namespace Warehouse
             var services = new ServiceCollection();
 
             services.AddSingleton<IConfiguration>(configuration);
+            services.AddSingleton<MainWindow>();
+
+            services.AddSingleton<GuiLoggerProvider>();
+            services.AddSingleton<ILoggerProvider>(sp => sp.GetRequiredService<GuiLoggerProvider>());
+
+            services.AddLogging();
+
 
             services.AddDbContext<WarehouseDbContext>(options =>
                 options.UseNpgsql(
                     configuration.GetConnectionString("WarehouseDb")));
-
-            _serviceProvider = services.BuildServiceProvider();
 
             _serviceProvider = services.BuildServiceProvider();
 
@@ -38,6 +47,9 @@ namespace Warehouse
                 .GetRequiredService<WarehouseDbContext>();
 
             var canConnect = dbContext.Database.CanConnect();
+
+            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
         }
     }
 
