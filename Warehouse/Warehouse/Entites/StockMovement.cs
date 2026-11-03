@@ -15,8 +15,8 @@ namespace Warehouse.Entites
         public MovementType MovementType { get; set; }
         public DateTime CreatedAt { get; set; }
         public string? Note { get; set; }
-        public Product Product { get; set; } = null!;
-        public Shelf? FromShelf { get; set; }
-        public Shelf? ToShelf { get; set; }
+        public virtual Product Product { get; set; } = null!;
+        public virtual Shelf? FromShelf { get; set; }
+        public virtual Shelf? ToShelf { get; set; }
     }
 }

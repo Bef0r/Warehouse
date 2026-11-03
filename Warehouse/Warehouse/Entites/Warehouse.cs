@@ -9,6 +9,6 @@ namespace Warehouse.Entites
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
-        public ICollection<Cabinet> Cabinets { get; set; } = new List<Cabinet>();
+        public virtual ICollection<Cabinet> Cabinets { get; set; } = new List<Cabinet>();
     }
 }

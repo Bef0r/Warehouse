@@ -11,6 +11,6 @@ public class Stock
     public int PositionX { get; set; }
     public int PositionY { get; set; }
     public int PositionZ { get; set; }
-    public Shelf Shelf { get; set; } = null!;
-    public Product Product { get; set; } = null!;
+    public virtual Shelf Shelf { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 }

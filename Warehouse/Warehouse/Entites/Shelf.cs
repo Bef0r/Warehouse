@@ -13,9 +13,9 @@ namespace Warehouse.Entites
         public double Width { get; set; }
         public double Height { get; set; }
         public double Depth { get; set; }
-        public Cabinet Cabinet { get; set; } = null!;
-        public ICollection<Stock> Stocks { get; set; } = new List<Stock>();
-        public ICollection<StockMovement> OutgoingMovements { get; set; } = new List<StockMovement>();
-        public ICollection<StockMovement> IncomingMovements { get; set; } = new List<StockMovement>();
+        public virtual Cabinet Cabinet { get; set; } = null!;
+        public virtual ICollection<Stock> Stocks { get; set; } = new List<Stock>();
+        public virtual ICollection<StockMovement> OutgoingMovements { get; set; } = new List<StockMovement>();
+        public virtual ICollection<StockMovement> IncomingMovements { get; set; } = new List<StockMovement>();
     }
 }

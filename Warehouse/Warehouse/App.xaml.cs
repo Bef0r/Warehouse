@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using System.Windows;
 using Warehouse.Database;
 using Warehouse.Logging;
+using Warehouse.Services;
+using Warehouse.ViewModel;
 
 namespace Warehouse
 {
@@ -32,12 +34,18 @@ namespace Warehouse
             services.AddSingleton<GuiLoggerProvider>();
             services.AddSingleton<ILoggerProvider>(sp => sp.GetRequiredService<GuiLoggerProvider>());
 
+
+            services.AddTransient<MainViewModel>();
+
+            services.AddScoped<WarehouseService>();
+
             services.AddLogging();
 
 
             services.AddDbContext<WarehouseDbContext>(options =>
-                options.UseNpgsql(
-                    configuration.GetConnectionString("WarehouseDb")));
+                options.
+                UseLazyLoadingProxies().
+                UseNpgsql(configuration.GetConnectionString("WarehouseDb")));
 
             _serviceProvider = services.BuildServiceProvider();
 

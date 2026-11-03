@@ -1,15 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Warehouse.Logging;
+using Warehouse.ViewModel;
 
 namespace Warehouse
 {
@@ -20,15 +12,16 @@ namespace Warehouse
     {
         private readonly ILogger<MainWindow> _logger;
         private readonly GuiLoggerProvider _loggerProvider;
-        public MainWindow(ILogger<MainWindow> logger, GuiLoggerProvider loggerProvider)
+        private readonly MainViewModel _viewModel;
+        public MainWindow(ILogger<MainWindow> logger, GuiLoggerProvider loggerProvider, MainViewModel viewModel)
         {
             InitializeComponent();
             _logger = logger;
             _loggerProvider = loggerProvider;
+            _viewModel = viewModel;
+            DataContext = _viewModel;
 
             _logger.LogInformation("MainWindow initialized.");
-            var numberOfLogs = _loggerProvider.Logs.Count;
-            _loggerProvider.ClearLogs();
         }
     }
 }

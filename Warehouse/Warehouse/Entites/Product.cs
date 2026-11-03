@@ -12,6 +12,6 @@ public class Product
     public double Height { get; set; }
     public double Depth { get; set; }
     public int MinimumStock { get; set; }
-    public Category Category { get; set; } = null!;
-    public ICollection<Stock> Stocks { get; set; }    = new List<Stock>();
+    public virtual Category Category { get; set; } = null!;
+    public virtual ICollection<Stock> Stocks { get; set; }    = new List<Stock>();
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,9 +9,13 @@ namespace Warehouse.Logging
 {
     public class GuiLoggerProvider : ILoggerProvider
     {
-        public int MaxLogsCount { get; set; } = 100;
-
+        public int MaxLogsCount { get; set; }
         public ObservableCollection<LogEntry> Logs = new ObservableCollection<LogEntry>();
+
+        public GuiLoggerProvider(IConfiguration configuration)
+        {
+            MaxLogsCount = configuration.GetSection("Logging").GetValue<int>("MaxLogsCount");
+        }
 
         public ILogger CreateLogger(string categoryName)
         {
