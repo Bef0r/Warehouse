@@ -21,6 +21,7 @@ namespace Warehouse
             _viewModel = viewModel;
             DataContext = _viewModel;
 
+            _viewModel.CreateCabinet();
             _logger.LogInformation("MainWindow initialized.");
         }
     }

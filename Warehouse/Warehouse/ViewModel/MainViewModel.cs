@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Warehouse.DTOs;
+using Warehouse.Entites;
+using Warehouse.Model;
 using Warehouse.Services;
 
 namespace Warehouse.ViewModel
@@ -33,10 +35,10 @@ namespace Warehouse.ViewModel
         }
 
 
-        public MainViewModel( IServiceScopeFactory serviceScopeFactorys)
+        public MainViewModel(IServiceScopeFactory serviceScopeFactorys)
         {
             _serviceScopeFactory = serviceScopeFactorys;
-        }   
+        }
 
         public async Task LoadWarehousesAsync()
         {
@@ -58,6 +60,21 @@ namespace Warehouse.ViewModel
             var warehouseService = scope.ServiceProvider.GetRequiredService<WarehouseService>();
             Shelves = new ObservableCollection<ShelfList>(await warehouseService.GetShelves(cabinetId));
         }
+
+        public async Task GetCabinetDetailsByCabinetId(int cabinetId)
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var warehouseService = scope.ServiceProvider.GetRequiredService<WarehouseService>();
+            var cabinetDetails = await warehouseService.GetCabinetDetails(cabinetId);
+        }
+
+        public async Task CreateCabinet(CabinetCreateModel cabinetCreateModel)
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var warehouseService = scope.ServiceProvider.GetRequiredService<WarehouseService>();
+            await warehouseService.CreateCabinet(cabinetCreateModel);
+        }
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

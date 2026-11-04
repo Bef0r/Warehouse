@@ -5,6 +5,7 @@ using Warehouse.DTOs;
 using Warehouse.Entites;
 using Warehouse.Entities;
 using Warehouse.Logging;
+using Warehouse.Model;
 
 namespace Warehouse.Services
 {
@@ -72,6 +73,75 @@ namespace Warehouse.Services
 
             cabinetList.ForEach(x => x.HasFreeSpace = HasFreeSpaceOnShelf(cabinetsShelves.First(y => y.Id == x.Id)));
             return cabinetList;
+        }
+
+        public async Task<CabinetDetails> GetCabinetDetails(int cabinetId)
+        {
+            var cabinet = await _dbContext.Cabinets.FirstAsync(x => x.Id == cabinetId);
+            var shelves = cabinet.Shelves;
+
+
+            var shelvesDetails = new List<ShelfDetails>();
+
+            foreach (var shelf in shelves)
+            {
+                var productsDetails = new List<StockDetails>();
+
+                foreach (var stock in shelf.Stocks)
+                {
+                    productsDetails.Add(new StockDetails()
+                    {
+                        ProductId = stock.ProductId,
+                        PositionX = stock.PositionX,
+                        PositionY = stock.PositionY,
+                        PositionZ = stock.PositionZ,
+                        ProductName = stock.Product.Name,
+                        Quantity = stock.Quantity,
+                        SKU = stock.Product.SKU
+                    });
+                }
+
+                shelvesDetails.Add(new ShelfDetails()
+                {
+                    Id = shelf.Id,
+                    Name = shelf.Name,
+                    Width = shelf.Width,
+                    Height = shelf.Height,
+                    Depth = shelf.Depth,
+                    Stocks = productsDetails
+                });
+            }
+
+            return new CabinetDetails()
+            {
+                Id = cabinet.Id,
+                Name = cabinet.Name,
+                Shelves = shelvesDetails
+            };
+        }
+
+        public async Task CreateCabinet(CabinetCreateModel cabinetCreateModel)
+        {
+            var newCabinet = new Cabinet()
+            {
+                WarehouseId = cabinetCreateModel.WarehouseId,
+                Name = cabinetCreateModel.Name,
+                
+            };
+
+            var shelves = cabinetCreateModel.Shelves.Select(x =>
+                new Shelf()
+                {
+                    Name = x.Name,
+                    Depth = x.Depth,
+                    Height = x.Height,
+                    Width = x.Width
+                }).ToList();
+
+            newCabinet.Shelves = shelves;
+
+            _dbContext.Cabinets.Add(newCabinet);
+            await _dbContext.SaveChangesAsync();
         }
 
         public bool HasFreeSpaceOnCabinet(Cabinet cabinet)
