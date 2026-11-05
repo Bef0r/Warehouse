@@ -31,6 +31,25 @@ namespace Warehouse.Database
                 .HasOne(x => x.ToShelf)
                 .WithMany(x => x.IncomingMovements)
                 .HasForeignKey(x => x.ToShelfId);
+
+            modelBuilder.Entity<Shelf>()
+                .HasOne(x => x.Cabinet)
+                .WithMany(x => x.Shelves)
+                .HasForeignKey(x => x.CabinetId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Stock>()
+                .HasOne(x => x.Shelf)
+                .WithMany(x => x.Stocks)
+                .HasForeignKey(x => x.ShelfId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Stock>()
+                .HasOne(x => x.Product)
+                .WithMany(x => x.Stocks)
+                .HasForeignKey(x => x.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
